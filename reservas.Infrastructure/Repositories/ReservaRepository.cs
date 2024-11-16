@@ -24,25 +24,20 @@ namespace reservas.Infrastructure.Repositories
         {
             try
             {
-                // Validar existencia del Cliente
                 var clienteExistente = await _context.Clientes.FindAsync(reserva.ClienteId);
                 if (clienteExistente == null)
                 {
                     throw new EntidadNoEncontradaException($"Cliente con ID {reserva.ClienteId} no encontrado.");
                 }
 
-                // Validar existencia del Servicio
                 var servicioExistente = await _context.Servicios.FindAsync(reserva.ServicioId);
                 if (servicioExistente == null)
                 {
                     throw new EntidadNoEncontradaException($"Servicio con ID {reserva.ServicioId} no encontrado.");
                 }
-
-                // Generar nuevo ID y establecer estado
                 reserva.Id = Guid.NewGuid();
                 reserva.Estado = "Activa";
 
-                // Agregar reserva
                 _context.Reservas.Add(reserva);
                 await _context.SaveChangesAsync();
             }
@@ -62,21 +57,18 @@ namespace reservas.Infrastructure.Repositories
                     throw new EntidadNoEncontradaException($"Reserva con ID {reserva.Id} no encontrada.");
                 }
 
-                // Validar existencia del Cliente
                 var clienteExistente = await _context.Clientes.FindAsync(reserva.ClienteId);
                 if (clienteExistente == null)
                 {
                     throw new EntidadNoEncontradaException($"Cliente con ID {reserva.ClienteId} no encontrado.");
                 }
 
-                // Validar existencia del Servicio
                 var servicioExistente = await _context.Servicios.FindAsync(reserva.ServicioId);
                 if (servicioExistente == null)
                 {
                     throw new EntidadNoEncontradaException($"Servicio con ID {reserva.ServicioId} no encontrado.");
                 }
 
-                // Actualizar campos
                 reservaExistente.FechaHora = reserva.FechaHora;
                 reservaExistente.ClienteId = reserva.ClienteId;
                 reservaExistente.ServicioId = reserva.ServicioId;
@@ -101,7 +93,6 @@ namespace reservas.Infrastructure.Repositories
                     throw new EntidadNoEncontradaException($"Reserva con ID {id} no encontrada.");
                 }
 
-                // Marcar la reserva como cancelada
                 reserva.Estado = "Cancelada";
 
                 await _context.SaveChangesAsync();
@@ -127,7 +118,6 @@ namespace reservas.Infrastructure.Repositories
                     throw new EntidadNoEncontradaException($"Reserva con ID {id} no encontrada.");
                 }
 
-                // Mapear la entidad Reserva a ReservaDto
                 var reservaDto = new ReservaDto
                 {
                     Id = reserva.Id,
@@ -139,13 +129,11 @@ namespace reservas.Infrastructure.Repositories
                         Id = reserva.Cliente.Id,
                         Nombre = reserva.Cliente.Nombre,
                         Apellido = reserva.Cliente.Apellido
-                        // Puedes agregar más propiedades si lo deseas
                     },
                     Servicio = new ServicioDto
                     {
                         Id = reserva.Servicio.Id,
                         Nombre = reserva.Servicio.Nombre
-                        // Puedes agregar más propiedades si lo deseas
                     }
                 };
 
